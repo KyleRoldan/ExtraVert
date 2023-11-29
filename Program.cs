@@ -12,7 +12,7 @@ AskingPrice = 25.00M,
 City = "Boston",
 Zip = 02118,
 Sold = false,
-AvailableUntil = new DateTime(2022, 10, 20),
+AvailableUntil = new DateTime(2025, 10, 20),
 },
 
 new Plant()
@@ -23,7 +23,7 @@ AskingPrice = 75.00M,
 City = "South Boston",
 Zip = 02222,
 Sold = false,
-AvailableUntil = new DateTime(2022, 10, 20),
+AvailableUntil = new DateTime(2025, 10, 20),
 },
 
 new Plant()
@@ -34,7 +34,7 @@ AskingPrice = 15.00M,
 City = "Charlestown",
 Zip = 02111,
 Sold = true,
-AvailableUntil = new DateTime(2023, 07, 13),
+AvailableUntil = new DateTime(2025, 07, 13),
 },
 new Plant()
 {
@@ -44,7 +44,7 @@ AskingPrice = 10.00M,
 City = "Brookline",
 Zip = 02446,
 Sold = true,
-AvailableUntil = new DateTime(2021, 09, 21),
+AvailableUntil = new DateTime(2025, 09, 21),
 },
 new Plant()
 {
@@ -54,7 +54,7 @@ AskingPrice = 34.00M,
 City = "Fenway",
 Zip = 02112,
 Sold = false,
-AvailableUntil = new DateTime(2022, 11, 22),
+AvailableUntil = new DateTime(2025, 11, 22),
 },
 
 
@@ -269,51 +269,75 @@ void PostPlantForAdoption()
 /////////////////////////////////////////////////////////////////////////////////////
 void AdoptPlant()
 {
-    Console.WriteLine("Available Plants for Adoption:");
+    while (true)
+    {
+        Console.WriteLine("Available Plants for Adoption:");
 
-     // create a new empty List to store the latest products
-    List<Plant> availablePlants = new List<Plant>();
-   
-    //loop through the products
-    foreach (Plant plant in plants)
-    {
-        //Add a product to latestProducts if it fits the criteria
-        if (!plant.Sold && plant.AvailableUntil > DateTime.Now)
-        {
-            availablePlants.Add(plant);
-            Console.WriteLine($"{availablePlants.Count}. {plant.Species}");
-        }
-    }
-    // print out the latest products to the console 
-    for (int i = 0; i < availablePlants.Count; i++)
-    {
-        Console.WriteLine($"{i + 1}. {availablePlants[i].Species}");
-    }
-    // Ask the user to choose a plant
-    Console.Write("Enter the number of the plant you want to adopt (0 to cancel): ");
-    if (int.TryParse(Console.ReadLine(), out int adoptionChoice))
-    {
-        if (adoptionChoice >= 1 && adoptionChoice <= availablePlants.Count)
-        {
-            // Update the Sold property of the chosen plant
-            Plant chosenPlant = availablePlants[adoptionChoice - 1];
-            chosenPlant.Sold = true;
+        // Create a new empty List to store the latest products
+        List<Plant> availablePlants = new List<Plant>();
 
-            Console.WriteLine($"You have adopted {chosenPlant.Species}. Press enter to continue.");
-            Console.ReadLine();
-        }
-        else if (adoptionChoice == 0)
+        // Loop through the plants
+        foreach (Plant plant in plants)
         {
-            Console.WriteLine("Adoption canceled. Press enter to continue.");
-            Console.ReadLine();
+            // Add a plant to availablePlants if it fits the criteria
+            if (!plant.Sold && plant.AvailableUntil > DateTime.Now)
+            {
+                availablePlants.Add(plant);
+                Console.WriteLine($"{availablePlants.Count}. {plant.Species}");
+            }
         }
-        else
+            
+        Console.WriteLine("Please select a plant to see details");
+        if (int.TryParse(Console.ReadLine(), out int detailsChoice))
         {
-            Console.WriteLine("Invalid choice. Press enter to continue.");
-            Console.ReadLine();
+            if (detailsChoice >= 1 && detailsChoice <= availablePlants.Count)
+            {
+                // Display details for the selected plant
+                Console.WriteLine(PlantDetails(availablePlants[detailsChoice - 1]));
+                Console.WriteLine("Press enter to continue.");
+                Console.ReadLine();
+
+
+            }
+            else if (detailsChoice == 0)
+            {
+                Console.WriteLine("Adoption canceled. Press enter to continue.");
+                Console.ReadLine();
+                break; // exit the loop and return to the previous prompt
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Press enter to continue.");
+                Console.ReadLine();
+            }
+        }
+
+        Console.WriteLine("Enter the number of the plant you want to adopt (0 to cancel): ");
+        if (int.TryParse(Console.ReadLine(), out int adoptionChoice))
+        {
+            if (adoptionChoice >= 1 && adoptionChoice <= availablePlants.Count)
+            {
+                // Update the Sold property of the chosen plant
+                Plant chosenPlant = availablePlants[adoptionChoice - 1];
+                chosenPlant.Sold = true;
+
+                Console.WriteLine($"You have adopted {PlantDetails(chosenPlant)}. Press enter to continue.");
+                Console.ReadLine();
+                break; // exit the loop and end the adoption process
+            }
+            else if (adoptionChoice == 0)
+            {
+                Console.WriteLine("Adoption canceled. Press enter to continue.");
+                Console.ReadLine();
+                break; // exit the loop and return to the previous prompt
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Press enter to continue.");
+                Console.ReadLine();
+            }
         }
     }
-    
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
